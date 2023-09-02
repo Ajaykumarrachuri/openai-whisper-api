@@ -5,7 +5,7 @@ import { exec } from 'child_process'
 //import FormData from 'form-data'
 import { cleanInput } from '../../lib/utils'
 
-import { whisper } from '../../services/openai'
+import { whisper, openAI } from '../../services/openai'
 
 export async function POST(req) {
 
@@ -59,7 +59,7 @@ export async function POST(req) {
         if(options.endpoint === 'translations') {
             sCommand = `whisper './${filepath}' --language ${options.language} --task translate --temperature ${options.temperature} --model tiny --output_dir '${outputDir}'`
         }
-
+        const timestamp1 = Date.now();
         const retval = await new Promise((resolve, reject) => {
 
             exec(sCommand, (error, stdout, stderr) => {
@@ -90,7 +90,7 @@ export async function POST(req) {
                 status: 400,
             })
         }
-
+        console.log(Date.now() - timestamp1);
         /**
          * retval.out format: '[00:01.000 --> 00:02.000]  thank\n' +
          *             '[00:02.720 --> 00:03.720]  you\n' +
@@ -122,17 +122,20 @@ export async function POST(req) {
     let data = ''
 
     try {
+        const timestamp1 = Date.now();
 
         const result = await whisper({
             mode: options.endpoint,
             file: fs.createReadStream(filepath),
-            response_format: 'vtt',
             temperature: options.temperature,
             language: options.language,
         })
-    
-        data = result?.data
 
+        data = result?.data;
+        const result1 = await openAI({input: data?.text});
+        data.text = data.text;
+        data.response = result1.data.choices[0].message.content;
+        data.responsetime=Date.now()-timestamp1;
         console.log(data)
 
     } catch(error) {

@@ -19,8 +19,10 @@ export async function whisper({
     try {
 
         let response = {}
+        let response1 = {}
 
         if(mode === 'translations') {
+ 
 
             response = await openai.createTranslation(
                 file,
@@ -44,7 +46,7 @@ export async function whisper({
 
         }
 
-        return response
+        return response;
 
     } catch(error) {
 
@@ -54,4 +56,27 @@ export async function whisper({
 
     }
 
+}
+export async function openAI({
+    input = "Hi",
+}){
+    try {
+
+        let response1 = {}
+
+        const chatCompletion = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{role: "user", content: input}],
+          });
+          
+
+        return chatCompletion;
+
+    } catch(error) {
+
+        console.log(error)
+
+        throw error
+
+    }
 }

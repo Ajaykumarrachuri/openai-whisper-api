@@ -34,6 +34,7 @@ export default function MainPage() {
     const listRef = React.useRef(null)
     const mediaRef = React.useRef()
     const chunksRef = React.useRef([])
+    const chunksRef1 = React.useRef([])
     const animFrame = React.useRef()
     const timerCount = React.useRef()
 
@@ -278,6 +279,7 @@ export default function MainPage() {
     const handleData = (e) => {
 
         chunksRef.current.push(e.data)
+        chunksRef1.current.push(e.data)
 
     }
 
@@ -353,11 +355,11 @@ export default function MainPage() {
                  * we will check if there is timestamp
                  * we are using vtt format so we should always have it
                  */
-                if(data.indexOf(':') > 0 && data.indexOf("-->") > 0) {
+                // if(data.indexOf(':') > 0 && data.indexOf("-->") > 0) {
 
-                    addDataItems(result)
+                    addDataItems(result);
 
-                }
+                // }
 
             }
             
@@ -371,6 +373,7 @@ export default function MainPage() {
 
     const handleStart = () => {
 
+        chunksRef1.current = []
         if(startRef.current === startStates.default) {
 
             startRef.current = startStates.active

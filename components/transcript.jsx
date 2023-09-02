@@ -40,18 +40,18 @@ export default function Transcript({
     let index = -1
     let flag = false
 
-    const tokens = data.split("\n")
-    for (let i = 0; i < tokens.length; i++) {
-        const s = tokens[i].trim()
-        if(s.indexOf(':') > 0 && s.indexOf('-->') > 0) {
-            index++
-            items.push({ timestamp: s, text: '' })
-            flag = true
-        } else if(flag) {
-            items[index].text = s
-            flag = false
-        }
-    }
+    // const tokens = data.split("\n")
+    // for (let i = 0; i < tokens.length; i++) {
+    //     const s = tokens[i].trim()
+    //     if(s.indexOf(':') > 0 && s.indexOf('-->') > 0) {
+    //         index++
+    //         items.push({ timestamp: s, text: '' })
+    //         flag = true
+    //     } else if(flag) {
+    //         items[index].text = s
+    //         flag = false
+    //     }
+    // }
 
     const handleDelete = (e) => {
         e.stopPropagation()
@@ -64,12 +64,32 @@ export default function Transcript({
     return (
         <div className={classes.container} onClick={onClick}>
             <div className={classes.top}>
-                <div className={classes.datetime}>{ formatDateTime(datetime) }</div>
+                {/* <div className={classes.datetime}>{ formatDateTime(datetime) }</div> */}
                 <div onClick={handleDelete} className={classes.iconButton}>
                     <DeleteIcon color="#fff" />
                 </div>
             </div>
-            <div className={classes.list}>
+            <div className={classes.item}>
+                 <span className={classes.text}>{ data.text }</span>
+                 <br/>
+            </div>
+            <div className={classes.response}>
+                {
+                    data.response.split("\n").map(function (item, idx) {
+                        return (
+                            <span className={classes.response} key={idx}>
+                                {item}
+                                <br/>
+                            </span>
+                        )
+                    })
+                }
+            </div>
+            <div className={classes.response}>
+            <span className={classes.text}>Response Time : </span>
+            <span className={classes.response}>{data.responsetime/1000}</span>
+            </div>
+            {/* <div className={classes.list}>
             {
                 items.map((item, index) => {
                     return (
@@ -80,7 +100,7 @@ export default function Transcript({
                     )
                 })
             }
-            </div>
+            </div> */}
         </div>
     )
 }
@@ -97,7 +117,7 @@ Transcript.propTypes = {
     /**
      * Transcription items
      */
-    data: PropTypes.string,
+    data: PropTypes.object,
     /**
      * Click event handler
      */
